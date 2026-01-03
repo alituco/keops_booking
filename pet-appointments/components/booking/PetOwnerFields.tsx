@@ -1,3 +1,18 @@
+"use client";
+
+import Grid from "@mui/material/Grid";
+import {
+  Box,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+  InputAdornment,
+} from "@mui/material";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import PhoneIphoneRoundedIcon from "@mui/icons-material/PhoneIphoneRounded";
+import PetsRoundedIcon from "@mui/icons-material/PetsRounded";
+
 export default function PetOwnerFields({
   petName,
   setPetName,
@@ -7,6 +22,7 @@ export default function PetOwnerFields({
   setOwnerName,
   phone,
   setPhone,
+  disabled,
 }: {
   petName: string;
   setPetName: (v: string) => void;
@@ -16,51 +32,90 @@ export default function PetOwnerFields({
   setOwnerName: (v: string) => void;
   phone: string;
   setPhone: (v: string) => void;
+  disabled?: boolean;
 }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-      <label style={{ display: "block" }}>
-        <div style={{ fontWeight: 600, marginBottom: 6 }}>Pet name</div>
-        <input
-          value={petName}
-          onChange={(e) => setPetName(e.target.value)}
+    <Grid container spacing={2} sx={{ width: "100%", m: 0 }}>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <TextField
+          label="Pet name"
           placeholder="Milo"
-          style={{ width: "100%", padding: 10 }}
+          value={petName}
+          disabled={disabled}
+          onChange={(e) => setPetName(e.target.value)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PetsRoundedIcon sx={{ opacity: 0.6 }} />
+              </InputAdornment>
+            ),
+          }}
         />
-      </label>
+      </Grid>
 
-      <label style={{ display: "block" }}>
-        <div style={{ fontWeight: 600, marginBottom: 6 }}>Species</div>
-        <select
-          value={species}
-          onChange={(e) => setSpecies(e.target.value as any)}
-          style={{ width: "100%", padding: 10 }}
-        >
-          <option value="dog">Dog</option>
-          <option value="cat">Cat</option>
-          <option value="other">Other</option>
-        </select>
-      </label>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <Box>
+          <Typography variant="caption" sx={{ display: "block", mb: 0.75, opacity: 0.75 }}>
+            Species
+          </Typography>
 
-      <label style={{ display: "block" }}>
-        <div style={{ fontWeight: 600, marginBottom: 6 }}>Owner name</div>
-        <input
-          value={ownerName}
-          onChange={(e) => setOwnerName(e.target.value)}
+          <ToggleButtonGroup
+            value={species}
+            exclusive
+            onChange={(_, v) => v && setSpecies(v)}
+            fullWidth
+            disabled={disabled}
+            sx={{
+              "& .MuiToggleButton-root": {
+                textTransform: "none",
+                fontWeight: 800,
+                py: 1.1,
+              },
+            }}
+          >
+            <ToggleButton value="dog">Dog</ToggleButton>
+            <ToggleButton value="cat">Cat</ToggleButton>
+            <ToggleButton value="other">Other</ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+      </Grid>
+
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <TextField
+          label="Owner name"
           placeholder="Ali"
-          style={{ width: "100%", padding: 10 }}
+          value={ownerName}
+          disabled={disabled}
+          onChange={(e) => setOwnerName(e.target.value)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PersonRoundedIcon sx={{ opacity: 0.6 }} />
+              </InputAdornment>
+            ),
+          }}
         />
-      </label>
+      </Grid>
 
-      <label style={{ display: "block" }}>
-        <div style={{ fontWeight: 600, marginBottom: 6 }}>Phone (SMS/WhatsApp)</div>
-        <input
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <TextField
+          label="Phone (SMS/WhatsApp)"
           placeholder="+973XXXXXXXX"
-          style={{ width: "100%", padding: 10 }}
+          value={phone}
+          disabled={disabled}
+          onChange={(e) => setPhone(e.target.value)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PhoneIphoneRoundedIcon sx={{ opacity: 0.6 }} />
+              </InputAdornment>
+            ),
+          }}
         />
-      </label>
-    </div>
+      </Grid>
+    </Grid>
   );
 }

@@ -1,32 +1,51 @@
 import type { PetService } from "@/types/domain";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress,
+  Box,
+} from "@mui/material";
 
 export default function ServiceSelect({
   services,
   value,
   onChange,
   disabled,
+  loading,
 }: {
   services: PetService[];
   value: string;
   onChange: (serviceId: string) => void;
   disabled?: boolean;
+  loading?: boolean;
 }) {
   return (
-    <label style={{ display: "block" }}>
-      <div style={{ fontWeight: 600, marginBottom: 6 }}>Service</div>
-      <select
+    <FormControl fullWidth disabled={disabled}>
+      <InputLabel id="service-label">Service</InputLabel>
+      <Select
+        labelId="service-label"
+        label="Service"
         value={value}
-        disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
-        style={{ width: "100%", padding: 10 }}
+        endAdornment={
+          loading ? (
+            <Box sx={{ mr: 2, display: "flex", alignItems: "center" }}>
+              <CircularProgress size={16} />
+            </Box>
+          ) : undefined
+        }
       >
-        <option value="">Select a service…</option>
+        <MenuItem value="">
+          <em>Select a service…</em>
+        </MenuItem>
         {services.map((s) => (
-          <option key={s.id} value={s.id}>
+          <MenuItem key={s.id} value={s.id}>
             {s.name} ({s.durationMinutes} min)
-          </option>
+          </MenuItem>
         ))}
-      </select>
-    </label>
+      </Select>
+    </FormControl>
   );
 }
