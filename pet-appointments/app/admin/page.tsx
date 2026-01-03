@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ServicesEditor from "@/components/admin/ServicesEditor";
+import BroadcastPanel from "@/components/admin/BroadcastPanel";
+import AppointmentsPanel from "@/components/admin/AppointmentsPanel";
+
 import {
   AppBar,
   Toolbar,
@@ -16,14 +19,20 @@ import {
   Divider,
   IconButton,
   Tooltip,
+  Tabs,
+  Tab,
 } from "@mui/material";
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
+type AdminTab = "services" | "appointments" | "broadcast";
+
 export default function AdminPage() {
   const [adminKey, setAdminKey] = useState("");
   const [input, setInput] = useState("");
+  const [tab, setTab] = useState<AdminTab>("appointments");
 
   useEffect(() => {
     const saved = sessionStorage.getItem("adminKey");
@@ -43,6 +52,7 @@ export default function AdminPage() {
     sessionStorage.removeItem("adminKey");
     setAdminKey("");
     setInput("");
+    setTab("appointments");
   }
 
   async function copyKey() {
@@ -84,7 +94,7 @@ export default function AdminPage() {
               Admin Dashboard
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.75 }}>
-              Manage vet services (name, duration, active)
+              Services, appointments, and broadcast tools
             </Typography>
           </Box>
 
@@ -149,12 +159,35 @@ export default function AdminPage() {
           <Paper
             elevation={0}
             sx={{
-              p: { xs: 1.5, sm: 2 },
               borderRadius: 3,
               border: "1px solid rgba(0,0,0,.12)",
+              overflow: "hidden",
             }}
           >
-            <ServicesEditor adminKey={adminKey} />
+            <Box sx={{ px: { xs: 1.25, sm: 2 }, pt: 1 }}>
+              <Tabs
+                value={tab}
+                onChange={(_, v) => setTab(v)}
+                variant="fullWidth"
+                sx={{ "& .MuiTab-root": { fontWeight: 900, textTransform: "none" } }}
+              >
+                <Tab value="appointments" label="Appointments" />
+                <Tab value="services" label="Services" />
+                <Tab value="broadcast" label="Broadcast" />
+              </Tabs>
+            </Box>
+
+            <Divider />
+
+            <Box sx={{ p: { xs: 1.5, sm: 2 } }}>
+              {tab === "appointments" ? (
+                <AppointmentsPanel />
+              ) : tab === "services" ? (
+                <ServicesEditor adminKey={adminKey} />
+              ) : (
+                <BroadcastPanel />
+              )}
+            </Box>
           </Paper>
         )}
       </Container>
